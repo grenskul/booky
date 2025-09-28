@@ -41,7 +41,14 @@ async def dl(ctx, *, url):
 
     else:
 
-        list_of_files = glob.glob('html/ficsbot/fics/*')
+        list_of_files = [
+            f for f in glob.glob('html/ficsbot/fics/*')
+            if os.path.isfile(f)
+        ]
+        if not list_of_files:
+            await user.send("didn't work, try again or contact grenskul")
+            return
+
         latest_file = max(list_of_files, key=os.path.getctime);
         latest_story = parse.quote(latest_file.replace('html/ficsbot', 'myurl.com'));
         temp_filename = latest_file.replace('html/ficsbot/fics', '');
@@ -102,3 +109,4 @@ async def run_command_shell(command):
     return result
 
 bot.run(os.getenv('discord_token'))
+
